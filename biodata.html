@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biodata Maker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Soft Pastel Shimmer Animated Background */
+        
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+
+    background: linear-gradient(-45deg,
+    #fdfbfb,
+    #f3e7ff,
+    #eaf4ff,
+    #fff5f7
+    
+);
+
+    background-size: 400% 400%;
+    animation: smoothBG 4s ease infinite; /* slower = smoother */
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Smooth Gradient Movement */
+@keyframes smoothBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Soft Glow Overlay (Enhanced White Glow ✨) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3), transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.25), transparent 60%);
+
+    animation: glowMove 4s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+/* Glow Movement */
+@keyframes glowMove {
+    0% {
+        transform: translate(0px, 0px);
+    }
+    100% {
+        transform: translate(40px, -40px);
+    }
+}
+}
+        /* Light Glassmorphism Container */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-blur: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Clean Modern Inputs */
+        .clean-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        .clean-input:focus {
+            outline: none;
+            background: #fff;
+            border-color: #a6c1ee;
+            box-shadow: 0 0 0 3px rgba(166, 193, 238, 0.3);
+        }
+
+        /* Clean Buttons */
+        .clean-btn {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .clean-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+        .clean-btn-primary {
+    background: #3b82f6; /* Simple blue */
+    color: #fff;
+    border: none;
+    box-shadow: none; /* remove shadow */
+}
+
+.clean-btn-primary:hover {
+    background: #3b82f6; /* same color, no hover change */
+    box-shadow: none;
+}
+        
+
+        /* Step Transitions */
+        .step-container { display: none; animation: fadeIn 0.5s ease; }
+        .step-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        /* Biodata Document Base (A4 Size for rendering) */
+        .biodata-document {
+            width: 794px; /* 210mm equivalent at 96dpi */
+            min-height: 1123px; /* 297mm equivalent */
+            background-color: white;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            box-sizing: border-box;
+            color: #222; 
+            flex-shrink: 0; 
+        }
+
+        /* Fixed Centered Preview Layout */
+        #scrollWrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .preview-scale { 
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Scrollbar for preview (Light Mode) */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+        
+        /* Drag & Drop zone */
+  .upload-icon {
+    width: 140px;
+    height: 180px; /* same = square */
+
+    margin: 0 auto;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0px; /* curve */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+
+    transition: 0.3s ease;
+}
+
+.upload-icon:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* icon */
+.upload-icon .icon {
+    font-size: 35px;
+    margin-bottom: 4px;
+}
+
+/* text */
+.upload-icon p {
+    font-size: 13px;
+    color: #666;
+}
+    
+    #dropZone {
+    width: 140px;
+    height: 180px; /* passport size */
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px dashed #ccc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* preview container */
+#photoPreviewContainer {
+    width: 100%;
+    height: 100%;
+}
+
+/* image */
+#photoPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 🔥 important */
+}
+    #replacePhotoBtn {
+    animation: floatBtn 2s ease-in-out infinite;
+}
+
+@keyframes floatBtn {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0px); }
+}
+    </style>
+</head>
+<body class="antialiased pb-24">
+    
+<main id="step1" class="step-container active w-full px-full mt-2">
+        <form id="biodataForm" class="glass-container rounded-2xl p-6 sm:p-10">
+            
+            <div class="mb-10 mt-4">
+              <div id="dropZone" class="upload-icon">
+    <input type="file" id="photoInput" accept="image/*" hidden>
+<div id="uploadText" class="upload-icon">
+    <div class="icon">📷</div>
+    <p>Add photo</p>
+</div>
+    <div id="photoPreviewContainer" class="hidden">
+        <img id="photoPreview">
+        
+    </div>
+</div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name *</label>
+                    <input type="text" id="nameInput" required class="w-full px-4 py-2.5 rounded-lg clean-input" placeholder="Enter full name">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Date of Birth *</label>
+                    <input type="date" id="dobInput" required class="w-full px-4 py-2.5 rounded-lg clean-input">
+                </div>
+            </div>
+
+            <div id="optionalFields">
+            </div>
+            
+            <div class="mt-10 flex justify-center">
+                <button type="submit" class="clean-btn-primary font-bold py-3.5 px-10 rounded-full text-lg tracking-wide flex items-center gap-2 transition duration-300">
+                    Next Step
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <main id="step2" class="step-container relative pt-4">
+        
+        <div class="max-w-4xl mx-auto glass-container rounded-2xl p-4 mb-6">
+            <div class="preview-wrapper w-full h-[65vh] overflow-auto custom-scrollbar bg-gray-100/50 rounded-lg p-4" id="scrollWrapper">
+                
+                <div class="preview-scale" id="previewScaleBox">
+                    <div id="renderDocument" class="biodata-document shadow-xl relative rounded-sm">
+                        
+                        <div id="renderPhotoContainer" class="absolute top-12 right-12 w-32 h-40 border-4 border-white shadow-md overflow-hidden hidden z-10">
+                            <img id="renderPhoto" class="w-full h-full object-cover" src="" alt="Profile">
+                        </div>
+
+                        <div class="p-16 pt-20 bg-white/70 min-h-full backdrop-blur-[2px] z-0">
+                            <div class="text-center text-orange-600 font-bold text-xl mb-4">॥ ॐ श्री गणेशाय नमः ॥</div>
+                            
+                            <h1 id="out-name" class="text-4xl font-bold text-gray-900 border-b-2 border-gray-400 pb-2 mb-4 w-max"></h1>
+                            
+                            <div id="dynamic-content-area" class="text-[17px] text-gray-800">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto mb-20">
+            <h3 class="text-gray-800 font-bold mb-3 px-2 text-lg">Select Template</h3>
+            <div class="flex gap-4 overflow-x-auto custom-scrollbar pb-4 px-2" id="templateGrid">
+                </div>
+        </div>
+
+        <div class="fixed bottom-0 left-0 w-full glass-container border-t border-white/40 p-4 z-50">
+            <div class="max-w-4xl mx-auto flex justify-between gap-4">
+                <button onclick="goToStep(1)" class="flex-1 clean-btn py-3 px-6 rounded-xl font-semibold text-center">
+                    Cancel
+                </button>
+                <button onclick="downloadImage()" id="downloadBtn" class="flex-1 clean-btn-primary font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    <span id="downloadBtnText">Download Image</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+    <!-- Floating Replace Photo Button -->
+<button id="replacePhotoBtn"
+    class="fixed bottom-24 right-6 bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center gap-2 transition-all duration-300 hidden">
+
+    🔄 Replace Photo
+</button>
+
+    <script>
+        // -- Configuration --
+        // Backend se aane wale templates ko yaha set karna
+        const templates = [
+            // Example: { id: 1, src: '/templates/template1.png' },
+        ];
+        
+        // Fields with Categories for structured arrangement
+        const optionalFieldsConfig = [
+            // Personal Details
+            { id: 'pob', label: 'Place of Birth', placeholder: 'City, State', category: 'Personal Details' },
+            { id: 'rashi', label: 'Rashi', placeholder: 'E.g., Leo, Kanya', category: 'Personal Details' },
+            { id: 'religion', label: 'Religion', placeholder: 'E.g., Hindu', category: 'Personal Details' },
+            { id: 'caste', label: 'Caste', placeholder: 'E.g., Agarwal, Brahmin', category: 'Personal Details' },
+            { id: 'height', label: 'Height', placeholder: 'E.g., 5 ft 8 in', category: 'Personal Details' },
+            { id: 'education', label: 'Education', placeholder: 'Highest degree / Qualification', category: 'Personal Details' },
+            { id: 'occupation', label: 'Occupation', placeholder: 'E.g., Engineer, Student', category: 'Personal Details' },
+            // Family Details
+            { id: 'fatherName', label: "Father's Name", placeholder: 'Full Name', category: 'Family Details' },
+            { id: 'fatherOcc', label: "Father's Occupation", placeholder: 'E.g., Business, Service', category: 'Family Details' },
+            { id: 'motherName', label: "Mother's Name", placeholder: 'Full Name', category: 'Family Details' },
+            { id: 'motherOcc', label: "mother's Occupation", placeholder: 'E.g., service,housewife', category: 'Family Details' },
+            { id: 'brothers', label: "Brothers", placeholder: 'E.g., 2', category: 'Family Details' },
+            { id: 'sisters', label: "Sisters", placeholder: 'E.g., 1', category: 'Family Details' },
+            // Contact Details
+            { id: 'address', label: "Address", placeholder: 'Full residential address', category: 'Contact Details' },
+            { id: 'contact', label: "Contact No.", placeholder: 'Phone Number', category: 'Contact Details' },
+        ];
+
+        let uploadedPhotoDataUrl = null;
+        let selectedTemplateId = null;
+
+        // ✅ Drag & Drop function (Bahar define karo)
+function initDragAndDrop() {
+    const dropZone = document.getElementById("dropZone");
+    const input = document.getElementById("photoInput");
+
+    dropZone.addEventListener("click", () => input.click());
+}
+
+
+// ✅ Main DOM Load
+document.addEventListener('DOMContentLoaded', () => {
+    initForm();
+    initDragAndDrop(); // ✅ ab sahi jagah call
+    initTemplates();
+
+    const replaceBtn = document.getElementById("replacePhotoBtn");
+
+    // ✅ Form Submit
+    document.getElementById('biodataForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        generatePreview();
+        goToStep(2);
+    });
+
+    // ✅ Resize
+    window.addEventListener('resize', adjustPreviewScale);
+
+    // ✅ Photo Upload
+    document.getElementById("photoInput").addEventListener("change", function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            uploadedPhotoDataUrl = e.target.result;
+
+            document.getElementById("photoPreview").src = e.target.result;
+            document.getElementById("photoPreviewContainer").classList.remove("hidden");
+            document.getElementById("uploadText").classList.add("hidden");
+
+            // ✅ Show replace button
+            replaceBtn.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 🔄 Replace Photo Button
+    replaceBtn.addEventListener("click", () => {
+        document.getElementById("photoInput").click();
+    });
+});
+    
+        // 1. Initialize Form with Categorized Fields (Updated styling)
+        function initForm() {
+            const container = document.getElementById('optionalFields');
+            let html = '';
+            
+            const categories = ['Personal Details', 'Family Details', 'Contact Details'];
+
+            categories.forEach(cat => {
+                html += `<h3 class="text-xl font-bold text-gray-800 mt-8 mb-4 border-b border-gray-300 pb-2">${cat}</h3>`;
+                html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                
+                const fields = optionalFieldsConfig.filter(f => f.category === cat);
+                fields.forEach(field => {
+                    html += `
+                        <div class="field-group flex items-end gap-2 transition-all duration-300">
+                            <div class="flex-1">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">${field.label}</label>
+                                <input type="text" data-label="${field.label}" data-category="${cat}" class="w-full px-4 py-2.5 rounded-lg clean-input" placeholder="${field.placeholder}">
+                            </div>
+                            <button type="button" onclick="removeField(this)" class="bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 p-2.5 rounded-lg border border-red-200 transition duration-200" title="Delete Field">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function removeField(btn) {
+            const group = btn.closest('.field-group');
+            group.style.opacity = '0';
+            group.style.transform = 'scale(0.95)';
+            setTimeout(() => group.remove(), 300);
+        }
+
+        
+
+        // 3. Template Grid (Light theme styling)
+        function initTemplates() {
+            const grid = document.getElementById('templateGrid');
+            if(templates.length === 0) {
+                grid.innerHTML = '<p class="text-sm text-gray-600 font-medium bg-white/50 px-4 py-2 rounded-lg">No templates loaded. (Load from backend)</p>';
+                return;
+            }
+
+            let html = '';
+            templates.forEach(tpl => {
+                html += `
+                    <div class="flex-shrink-0 w-32 cursor-pointer relative group" onclick="applyTemplate(${tpl.id})">
+                        <div class="w-full h-44 bg-white rounded-lg overflow-hidden border-2 ${selectedTemplateId === tpl.id ? 'border-blue-500' : 'border-gray-200'} group-hover:border-blue-400 transition duration-300 flex items-center justify-center text-xs text-gray-400 shadow-sm" id="thumb-${tpl.id}">
+                            <img src="${tpl.src}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <span style="display:none">Template ${tpl.id}</span>
+                        </div>
+                        ${selectedTemplateId === tpl.id ? 
+                            '<div class="absolute inset-0 border-4 border-blue-500 rounded-lg z-20 pointer-events-none" id="tick-'+tpl.id+'"></div>' 
+                            : ''
+                        }
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        function applyTemplate(id) {
+            selectedTemplateId = id;
+            
+            templates.forEach(tpl => {
+                const thumb = document.getElementById(`thumb-${tpl.id}`);
+                if(thumb) thumb.className = `w-full h-44 bg-white rounded-lg overflow-hidden border-2 group-hover:border-blue-400 transition duration-300 flex items-center justify-center text-xs text-gray-400 shadow-sm ${selectedTemplateId === tpl.id ? 'border-blue-500' : 'border-gray-200'}`;
+            });
+
+            const template = templates.find(t => t.id === id);
+            const doc = document.getElementById('renderDocument');
+            
+            if(template) {
+                doc.style.backgroundImage = `url('${template.src}')`;
+            } else {
+                doc.style.backgroundImage = 'none';
+            }
+        }
+
+        // 4. Generate the Category Wise Biodata Content
+        function generatePreview() {
+            const nameVal = document.getElementById('nameInput').value;
+            document.getElementById('out-name').innerText = nameVal;
+
+            const photoEl = document.getElementById('renderPhoto');
+            const photoCont = document.getElementById('renderPhotoContainer');
+            if(uploadedPhotoDataUrl) {
+                photoEl.src = uploadedPhotoDataUrl;
+                photoCont.classList.remove('hidden');
+            } else {
+                photoCont.classList.add('hidden');
+            }
+
+            const contentArea = document.getElementById('dynamic-content-area');
+            let contentHtml = '';
+            const categories = ['Personal Details', 'Family Details', 'Contact Details'];
+
+            categories.forEach(cat => {
+                let catHtml = '';
+
+                if(cat === 'Personal Details') {
+                    const dob = new Date(document.getElementById('dobInput').value);
+                    const dobFmt = dob.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    if(dobFmt !== "Invalid Date") {
+                        catHtml += `
+                            <div class="flex border-b border-gray-300/50 pb-2 mb-2">
+                                <div class="w-44 font-semibold text-gray-700">Date of Birth</div>
+                                <div class="flex-1">: ${dobFmt}</div>
+                            </div>`;
+                    }
+                }
+
+                const inputs = document.querySelectorAll(`#optionalFields input[data-category="${cat}"]`);
+                inputs.forEach(input => {
+                    if(input.value.trim() !== '' && input.closest('.field-group')) { 
+                        const label = input.getAttribute('data-label');
+                        catHtml += `
+<div class="flex border-b border-gray-300/50 pb-2 mb-2">
+    <div class="w-44 font-semibold text-gray-700 whitespace-nowrap">${label}</div>
+    <div class="px-2">:</div>
+    <div class="flex-1 text-gray-900 break-words">${input.value}</div>
+</div>`;
+                    }
+                });
+
+                if(catHtml !== '') {
+                    contentHtml += `
+                        <div class="mb-6 mt-2">
+                            <h3 class="text-xl font-bold text-orange-600 border-b-2 border-orange-300 inline-block pr-10 mb-3">${cat}</h3>
+                            <div class="pl-2 space-y-1">
+                                ${catHtml}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            contentArea.innerHTML = contentHtml;
+
+            if(selectedTemplateId) applyTemplate(selectedTemplateId);
+        }
+
+        // 5. Flow & Scalable Stable Preview
+        function goToStep(stepNumber) {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (stepNumber === 2) setTimeout(adjustPreviewScale, 100); 
+        }
+
+        function adjustPreviewScale() {
+            if (document.getElementById('step2').classList.contains('active')) {
+                const wrapper = document.getElementById('scrollWrapper');
+                const doc = document.getElementById('renderDocument');
+                const scaleBox = document.getElementById('previewScaleBox');
+                const docWidth = 794; 
+
+                const availableWidth = wrapper.clientWidth - 32; 
+                
+                if (availableWidth < docWidth) {
+                    const scale = availableWidth / docWidth;
+                    doc.style.transform = `scale(${scale})`;
+                    doc.style.transformOrigin = 'top center';
+                    scaleBox.style.height = `${1123 * scale}px`;
+                } else {
+                    doc.style.transform = 'scale(1)';
+                    scaleBox.style.height = '1123px';
+                }
+            }
+        }
+
+        // 6. Download Image (html2canvas)
+        async function downloadImage() {
+            const btn = document.getElementById('downloadBtn');
+            const btnText = document.getElementById('downloadBtnText');
+            const originalText = btnText.innerText;
+            
+            btnText.innerHTML = 'Generating... <span class="animate-pulse">⏳</span>';
+            btn.classList.add('opacity-50', 'pointer-events-none');
+
+            const elementToCapture = document.getElementById('renderDocument');
+            
+            const originalTransform = elementToCapture.style.transform;
+            elementToCapture.style.transform = 'scale(1)';
+            
+            try {
+                await new Promise(r => setTimeout(r, 150));
+
+                const canvas = await html2canvas(elementToCapture, {
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: "#ffffff",
+                    allowTaint: true
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const nameStr = document.getElementById('nameInput').value || 'User';
+                
+                const link = document.createElement('a');
+                link.download = `${nameStr.replace(/\s+/g, '_')}_Biodata.png`;
+                link.href = imgData;
+                link.click();
+
+            } catch (error) {
+                console.error("Download Error:", error);
+                alert("Image generate karte waqt kuch error aa gaya. Local Server use karna ensure karein.");
+            } finally {
+                elementToCapture.style.transform = originalTransform;
+                btnText.innerText = originalText;
+                btn.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+    </script>
+</body>
+</html>
