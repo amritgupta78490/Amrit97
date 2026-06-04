@@ -1359,24 +1359,28 @@ await setPersistence(auth, browserLocalPersistence);
     window.openAboutDialog = openAboutDialog;
 
     // LOGIN SYSTEM (UPDATED: Using signInWithPopup for guaranteed execution across environments)
-    async function loginWithGoogle() {
-  try {
+async function loginWithGoogle() {
 
-    await setPersistence(auth, browserLocalPersistence);
+  alert("BUTTON CLICKED");
+
+  try {
 
     const provider = new GoogleAuthProvider();
 
     const result = await signInWithPopup(auth, provider);
 
-alert(result.user.email);
-console.log(result.user);
+    alert("SUCCESS");
 
-    alert("POPUP SUCCESS");
+    console.log(result.user);
 
-  } catch (err) {
+  } catch(err) {
 
-    alert(err.code + "\n" + err.message);
+    alert(
+      err.code + "\n" +
+      err.message
+    );
 
+    console.error(err);
   }
 }
     
