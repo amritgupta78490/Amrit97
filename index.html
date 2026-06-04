@@ -1361,14 +1361,22 @@
     async function loginWithGoogle() {
   try {
     const provider = new GoogleAuthProvider();
+
     const result = await signInWithPopup(auth, provider);
 
-    console.log("SUCCESS", result.user);
-    alert("Login Success");
+    console.log(result.user);
+
+    alert("Popup Success");
 
   } catch (err) {
-    console.error(err);
-    alert(err.code + "\n" + err.message);
+
+    console.log(err);
+
+    alert(
+      "CODE = " + err.code +
+      "\nMESSAGE = " + err.message
+    );
+
   }
 }
     // LOGOUT SYSTEM
@@ -1381,15 +1389,17 @@
     }
 
     // USER STATE LISTENER
-    function setupAuth() {
+    
+  function setupAuth() {
+
   onAuthStateChanged(auth, (user) => {
-    console.log("Auth User:", user);
+    console.log("AUTH STATE =", user);
 
-    const authArea = document.getElementById("authArea");
-
-    if (user) {
-      alert("Login Success: " + user.displayName);
-
+    if(user){
+      alert("LOGIN SUCCESS\n" + user.email);
+    }else{
+      alert("NO USER");
+  
       currentUser = user;
 
       authArea.innerHTML = `
