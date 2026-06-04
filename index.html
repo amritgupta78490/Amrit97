@@ -886,6 +886,7 @@
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+  
     // Scope cache drivers
     let dbAzad;
     let dbBiharSin;
@@ -1361,13 +1362,16 @@
     async function loginWithGoogle() {
   try {
     const provider = new GoogleAuthProvider();
-    await signInWithRedirect(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+
+    console.log("SUCCESS", result.user);
+    alert("Login Success");
+
   } catch (err) {
     console.error(err);
-    showError("Login failed: " + err.message);
+    alert(err.code + "\n" + err.message);
   }
 }
-
     // LOGOUT SYSTEM
     async function logoutUser() {
       try {
@@ -1379,40 +1383,35 @@
 
     // USER STATE LISTENER
     function setupAuth() {
-      getRedirectResult(auth)
-  .then((result) => {
-    if (result?.user) {
-      console.log("Redirect Login Success", result.user);
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-      onAuthStateChanged(auth, (user) => {
-        console.log("Auth User:", user);
-        const authArea = document.getElementById("authArea");
+  onAuthStateChanged(auth, (user) => {
+    console.log("Auth User:", user);
 
-        if (user) {
-          alert("Login Success: " + user.displayName);
-          currentUser = user;
-          authArea.innerHTML = `
-            <div style="display:flex;align-items:center;gap:8px;">
-              <img src="${user.photoURL}" style="width:40px;height:40px;border-radius:50%;border:2px solid #000;">
-              <button class="btn-primary" onclick="logoutUser()">
-                Logout
-              </button>
-            </div>
-          `;
-        } else {
-          currentUser = null;
-          authArea.innerHTML = `
-            <button class="btn-primary" onclick="loginWithGoogle()">
-              Login
-            </button>
-          `;
-        }
-      });
+    const authArea = document.getElementById("authArea");
+
+    if (user) {
+      alert("Login Success: " + user.displayName);
+
+      currentUser = user;
+
+      authArea.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;">
+          <img src="${user.photoURL}" style="width:40px;height:40px;border-radius:50%;border:2px solid #000;">
+          <button class="btn-primary" onclick="logoutUser()">
+            Logout
+          </button>
+        </div>
+      `;
+    } else {
+      currentUser = null;
+
+      authArea.innerHTML = `
+        <button class="btn-primary" onclick="loginWithGoogle()">
+          Login
+        </button>
+      `;
     }
+  });
+}
 
     window.loginWithGoogle = loginWithGoogle;
     window.logoutUser = logoutUser;
