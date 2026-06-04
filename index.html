@@ -883,9 +883,10 @@
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
-  signOut
+  signOut,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-    
     // Scope cache drivers
     let dbAzad;
     let dbBiharSin;
@@ -957,7 +958,7 @@ setupAuth();
         const appAzad = initializeApp(firebaseConfigAzad); // Set as Default App
         dbAzad = getFirestore(appAzad);
         auth = getAuth(appAzad);
-        console.log("Auth Ready:", auth);
+await setPersistence(auth, browserLocalPersistence);
         
         const appBihar = initializeApp(firebaseConfigBiharSin, "biharSinApp");
         dbBiharSin = getFirestore(appBihar);
@@ -1361,27 +1362,24 @@ setupAuth();
     async function loginWithGoogle() {
   try {
 
+    await setPersistence(auth, browserLocalPersistence);
+
     const provider = new GoogleAuthProvider();
 
     const result = await signInWithPopup(auth, provider);
 
-    alert("POPUP SUCCESS");
+alert(result.user.email);
+console.log(result.user);
 
-    console.log(result.user);
+    alert("POPUP SUCCESS");
 
   } catch (err) {
 
-    console.error(err);
-
-    alert(
-      "ERROR:\n" +
-      err.code +
-      "\n\n" +
-      err.message
-    );
+    alert(err.code + "\n" + err.message);
 
   }
 }
+    
     // LOGOUT SYSTEM
     async function logoutUser() {
       try {
