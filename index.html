@@ -1393,24 +1393,32 @@
   function setupAuth() {
 
   onAuthStateChanged(auth, (user) => {
+
     console.log("AUTH STATE =", user);
 
-    if(user){
+    const authArea = document.getElementById("authArea");
+
+    if (user) {
+
       alert("LOGIN SUCCESS\n" + user.email);
-    }else{
-      alert("NO USER");
-  
+
       currentUser = user;
 
       authArea.innerHTML = `
         <div style="display:flex;align-items:center;gap:8px;">
-          <img src="${user.photoURL}" style="width:40px;height:40px;border-radius:50%;border:2px solid #000;">
+          <img src="${user.photoURL}"
+               style="width:40px;height:40px;border-radius:50%;border:2px solid #000;">
+
           <button class="btn-primary" onclick="logoutUser()">
             Logout
           </button>
         </div>
       `;
+
     } else {
+
+      alert("NO USER FOUND");
+
       currentUser = null;
 
       authArea.innerHTML = `
@@ -1418,14 +1426,17 @@
           Login
         </button>
       `;
-    }
-  });
-}
 
+    }
+
+  });
+
+}
     window.loginWithGoogle = loginWithGoogle;
     window.logoutUser = logoutUser;
     
     window.addEventListener('DOMContentLoaded', initApp);
+    
   </script>
 </body>
 </html>
