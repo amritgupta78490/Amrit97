@@ -925,8 +925,8 @@
      */
     async function initApp() {
       initializeFirebase();
-      setupAuth();
-      setupSearchBinds();
+console.log(auth);
+setupAuth();
       
       showLoading('categories');
       showLoading('courses');
@@ -1360,21 +1360,24 @@
     // LOGIN SYSTEM (UPDATED: Using signInWithPopup for guaranteed execution across environments)
     async function loginWithGoogle() {
   try {
+
     const provider = new GoogleAuthProvider();
 
     const result = await signInWithPopup(auth, provider);
 
-    console.log(result.user);
+    alert("POPUP SUCCESS");
 
-    alert("Popup Success");
+    console.log(result.user);
 
   } catch (err) {
 
-    console.log(err);
+    console.error(err);
 
     alert(
-      "CODE = " + err.code +
-      "\nMESSAGE = " + err.message
+      "ERROR:\n" +
+      err.code +
+      "\n\n" +
+      err.message
     );
 
   }
